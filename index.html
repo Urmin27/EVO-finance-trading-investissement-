@@ -416,7 +416,10 @@
   <!-- ========= Section 5 : Gestion d'équipes ========= -->
   <section id="section-team">
     <h2>Gestion d'équipes</h2>
-    <p>Votre lien d'invitation: <span id="invitation-link"></span></p>
+    <p>
+      Votre lien d'invitation:
+      <span id="invitation-link" style="text-decoration:underline; cursor:pointer;"></span>
+    </p>
     <button id="copy-invitation-link">Copier le lien</button>
     <h3>Liste des équipes validées</h3>
     <table id="team-table">
@@ -845,6 +848,12 @@
     updateInvitationLink();
     updateTeamTable();
     updateReferralBonus();
+
+    /********* IMPORTANT : Faire en sorte que le clic sur le lien d'invitation ouvre le formulaire d'inscription *********/
+    document.getElementById("invitation-link").addEventListener("click", function(e){
+      e.preventDefault();
+      openRegistrationModal();
+    });
 
     /********* Mise à jour au chargement *********/
     updateHistoriqueTable();
