@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="mg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evo-finance investissement</title>
+  <style>
+    /* ---------- Styles Globaux ---------- */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #1a3b6e;
+      color: #fff;
+      padding: 20px;
+    }
+    h1, h2, h3 {
+      text-align: center;
+    }
+    a {
+      color: #ff9800;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    button {
+      cursor: pointer;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #ff9800;
+      color: #fff;
+      font-weight: bold;
+      margin: 5px;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #e68900;
+    }
+    table {
+      width: 90%;
+      margin: 10px auto;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.1);
+    }
+    table, th, td {
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    th, td {
+      padding: 8px;
+      text-align: center;
+    }
+    /* ---------- Section 1 : Solde & Trading ---------- */
+    #section-solde {
+      margin-bottom: 40px;
+    }
+    #section-solde p {
+      font-size: 1.2em;
+    }
+    #investment-plan {
+      margin-top: 20px;
+    }
+    /* Animation de Trading (20 secondes) */
+    #trading-animation {
+      display: none;
+      font-size: 1.5em;
+      text-align: center;
+      margin: 20px auto;
+      padding: 20px;
+      background: rgba(0,0,0,0.6);
+      border-radius: 10px;
+      width: 80%;
+    }
+    /* ---------- Section 2 : Transactions ---------- */
+    #section-transaction {
+      margin-bottom: 40px;
+    }
+    .form-container {
+      display: none;
+      margin: 10px auto;
+      padding: 15px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 8px;
+      width: 90%;
+    }
+    label {
+      display: block;
+      margin: 8px 0;
+    }
+    input[type="number"],
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select {
+      width: 95%;
+      padding: 5px;
+      border-radius: 3px;
+      border: none;
+      margin-top: 5px;
+    }
+    /* Bouton petit pour copier l'adresse */
+    .small-btn {
+      font-size: 0.8em;
+      padding: 5px 10px;
+      margin-left: 5px;
+    }
+    /* ---------- Zones de Notification ---------- */
+    #center-notification, #top-notification {
+      display: none;
+      position: fixed;
+      background: rgba(0,0,0,0.85);
+      padding: 10px 20px;
+      border-radius: 5px;
+      z-index: 1100;
+      font-size: 1.2em;
+    }
+    #center-notification {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    #top-notification {
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    /* ---------- Journal des Notifications ---------- */
+    #notification-log {
+      max-height: 150px;
+      overflow-y: auto;
+      border: 1px solid #fff;
+      padding: 10px;
+      margin: 20px auto;
+      width: 90%;
+      background: rgba(0,0,0,0.5);
+      font-size: 0.9em;
+    }
+    /* ---------- Sections 3 & 4 : Confirmation & Historique ---------- */
+    section.confirmation, section.historique {
+      margin-bottom: 40px;
+    }
+    /* ---------- Menu Three Dots ---------- */
+    #menu-button {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1200;
+      background: rgba(0,0,0,0.7);
+      padding: 5px 10px;
+      border-radius: 50%;
+    }
+    #side-menu {
+      display: none;
+      position: fixed;
+      top: 50px;
+      left: 10px;
+      background: rgba(0,0,0,0.7);
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 1200;
+    }
+    #side-menu ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    #side-menu li {
+      margin: 5px 0;
+    }
+    #side-menu a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.9em;
+    }
+    #side-menu a:hover {
+      text-decoration: underline;
+    }
+    /* ---------- Gestion d'équipes ---------- */
+    #section-team {
+      margin-top: 40px;
+      padding: 15px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 8px;
+    }
+    #section-team p, #section-team h3 {
+      text-align: center;
+    }
+    /* ---------- Modal Styles ---------- */
+    .modal {
+      display: none; 
+      position: fixed;
+      z-index: 1300;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background-color: #1a3b6e;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 10px;
+      color: #fff;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .close:hover, .close:focus {
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    /* ---------- Auth Links ---------- */
+    #auth-links {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Auth links -->
+  <div id="auth-links">
+    <a href="#" id="open-registration">S'inscrire</a> | 
+    <a href="#" id="open-login">Se connecter</a>
+  </div>
+
+  <!-- Registration Modal -->
+  <div id="registration-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="close-registration">&times;</span>
+      <h2>Inscription</h2>
+      <form id="registration-form">
+        <label>Nom et Prénom:
+          <input type="text" id="reg-name" required>
+        </label>
+        <label>Téléphone:
+          <input type="text" id="reg-phone" required>
+        </label>
+        <label>Email:
+          <input type="email" id="reg-email" required>
+        </label>
+        <label>Mot de passe:
+          <input type="password" id="reg-password" required>
+        </label>
+        <label id="recaptcha-label"></label>
+          <input type="number" id="reg-recaptcha" required>
+        <label>Code d'invitation:
+          <input type="text" id="reg-invite" readonly>
+        </label>
+        <button type="submit">S'inscrire</button>
+      </form>
+      <p>Déjà inscrit ? <a href="#" id="show-login">Connectez-vous</a></p>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="close-login">&times;</span>
+      <h2>Connexion</h2>
+      <form id="login-form">
+        <label>Numéro de téléphone:
+          <input type="text" id="login-phone" required>
+        </label>
+        <label>Mot de passe:
+          <input type="password" id="login-password" required>
+        </label>
+        <button type="submit">Se connecter</button>
+      </form>
+      <p><a href="#" id="forgot-password">Mot de passe oublié ?</a></p>
+    </div>
+  </div>
+
+  <!-- Three Dots Menu Button -->
+  <div id="menu-button">⋮</div>
+  <!-- Sidebar Menu (hidden by default) -->
+  <div id="side-menu">
+    <ul>
+      <li><a href="https://example.com/damnade-retrait" target="_blank">Damnade du retrait</a></li>
+      <li><a href="https://example.com/demande-depot" target="_blank">demande du dépôt</a></li>
+      <li><a href="https://example.com/besoin-daide" target="_blank">besoin d'aide</a></li>
+      <li><a href="https://example.com/profil-entreprise" target="_blank">Profil de l'entreprise</a></li>
+      <li><a href="https://example.com/service-client" target="_blank">service client</a></li>
+      <li><a href="https://example.com/gestion-equipes" target="_blank">Gestion d'aquipes</a></li>
+      <li><a href="https://example.com/se-deconnecter" target="_blank">se deconnecter</a></li>
+    </ul>
+  </div>
+  
+  <h1>EVO-FINANCE</h1>
+
+  <!-- ========= Section 1 : Solde & Trading ========= -->
+  <section id="section-solde">
+    <h2>Solde du Dépôt et Solde des Gains</h2>
+    <p>Dépôt : $<span id="soldeDepot">0.00</span></p>
+    <p>Gains : $<span id="soldeGains">0.00</span></p>
+    <button id="start-trading">Commencer à Trading</button>
+    <!-- Animation de trading pendant 20 secondes -->
+    <div id="trading-animation">Animation de Trading... Patientez 20 secondes...</div>
+    <!-- Tableau du plan d'investissement -->
+    <table id="investment-plan">
+      <thead>
+        <tr>
+          <th>Niveau</th>
+          <th>Dépôt Minimum</th>
+          <th>Gains Quotidien</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Niveau 1</td>
+          <td>$15</td>
+          <td>1.5% par jour</td>
+        </tr>
+        <tr>
+          <td>Niveau 2</td>
+          <td>$200</td>
+          <td>1.6% par jour</td>
+        </tr>
+        <tr>
+          <td>Niveau 3</td>
+          <td>$1000</td>
+          <td>1.8% par jour</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ========= Section 2 : Transactions ========= -->
+  <section id="section-transaction">
+    <h2>Transactions</h2>
+    <div style="text-align:center;">
+      <button id="btn-depot">Dépôt</button>
+      <button id="btn-retrait">Retrait</button>
+    </div>
+    <!-- Formulaire Dépôt -->
+    <div id="form-depot" class="form-container">
+      <h3>Dépôt</h3>
+      <label>
+        Montant ($) :
+        <input type="number" id="depot-amount">
+      </label>
+      <label>
+        Adresse du Dépôt :
+        <select id="depot-address">
+          <option value="adresse1" data-address="0x123456789ABCDEF">Adresse 1</option>
+          <option value="adresse2" data-address="0xFEDCBA987654321">Adresse 2</option>
+        </select>
+        <button id="copy-depot-address" class="small-btn">Copier</button>
+      </label>
+      <button id="submit-depot">Valider le Dépôt</button>
+    </div>
+    <!-- Formulaire Retrait -->
+    <div id="form-retrait" class="form-container">
+      <h3>Retrait</h3>
+      <label>
+        Montant ($) :
+        <input type="number" id="retrait-amount">
+      </label>
+      <label>
+        Adresse du Retrait (USDT BEP20 / PAYEER) :
+        <input type="text" id="retrait-address">
+      </label>
+      <button id="submit-retrait">Valider le Retrait</button>
+    </div>
+  </section>
+
+  <!-- ========= Section 3 : Confirmation ========= -->
+  <section class="confirmation" id="section-confirmation">
+    <h2>Tableau de Confirmation</h2>
+    <button id="access-confirmation">Accéder au Tableau de Confirmation</button>
+    <div id="confirmation-area" style="display:none;">
+      <table id="confirmation-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Client</th>
+            <th>Type</th>
+            <th>Montant</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ========= Section 4 : Historique ========= -->
+  <section class="historique" id="section-historique">
+    <h2>Historique des Transactions</h2>
+    <table id="historique-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Client</th>
+          <th>Type</th>
+          <th>Montant</th>
+          <th>Date</th>
+          <th>Résultat</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- ========= Section 5 : Gestion d'équipes ========= -->
+  <section id="section-team">
+    <h2>Gestion d'équipes</h2>
+    <p>Votre lien d'invitation: <span id="invitation-link"></span></p>
+    <button id="copy-invitation-link">Copier le lien</button>
+    <h3>Liste des équipes validées</h3>
+    <table id="team-table">
+      <thead>
+        <tr>
+          <th>Nom et Prénom</th>
+          <th>Téléphone</th>
+          <th>Email</th>
+          <th>Statut</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div id="referral-bonus-section">
+      <p>Bonus Referral accumulé: $<span id="referral-bonus">0.00</span></p>
+      <button id="add-referral-bonus" style="display:none;">Ajouter bonus</button>
+    </div>
+  </section>
+
+  <!-- Zones de Notification et Journal -->
+  <div id="center-notification"></div>
+  <div id="top-notification"></div>
+  <div id="notification-log"></div>
+
+  <!-- ========== Script JavaScript ========== -->
+  <script>
+    /********* Variables Globales *********/
+    let soldeDepot = parseFloat(localStorage.getItem("soldeDepot")) || 0;
+    let soldeGains = parseFloat(localStorage.getItem("soldeGains")) || 0;
+    let lastTradingDate = localStorage.getItem("lastTradingDate") || "";
+    let lastDeposit = localStorage.getItem("lastDeposit") || "";
+    let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+    const clientID = "Client1";
+    const INVITER_CODE = "MYINVITE";  // Code d'invitation de l'admin
+    let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
+
+    /********* Fonctions de Mise à Jour *********/
+    function updateBalances() {
+      document.getElementById("soldeDepot").innerText = soldeDepot.toFixed(2);
+      document.getElementById("soldeGains").innerText = soldeGains.toFixed(2);
+      localStorage.setItem("soldeDepot", soldeDepot);
+      localStorage.setItem("soldeGains", soldeGains);
+    }
+    function addLog(message) {
+      const log = document.getElementById("notification-log");
+      const p = document.createElement("p");
+      p.innerText = message;
+      log.appendChild(p);
+    }
+    function showCenteredNotification(message, duration) {
+      const centerNotif = document.getElementById("center-notification");
+      centerNotif.innerText = message;
+      centerNotif.style.display = "block";
+      setTimeout(() => { centerNotif.style.display = "none"; }, duration);
+    }
+    function showTopNotification(message, duration) {
+      const topNotif = document.getElementById("top-notification");
+      topNotif.innerText = message;
+      topNotif.style.display = "block";
+      setTimeout(() => { topNotif.style.display = "none"; }, duration);
+    }
+    updateBalances();
+
+    /********* Section 1 : Trading *********/
+    document.getElementById("start-trading").addEventListener("click", function(){
+      const today = new Date().toDateString();
+      if(lastTradingDate === today) {
+        alert("Vous ne pouvez commencer à trading qu'une fois par jour.");
+        return;
+      }
+      if(soldeDepot < 15) {
+        alert("Un dépôt minimum de $15 est requis pour commencer à trading.");
+        return;
+      }
+      let percentage = 0.015;
+      if(soldeDepot >= 1000) {
+        percentage = 0.018;
+      } else if(soldeDepot >= 200) {
+        percentage = 0.016;
+      }
+      const anim = document.getElementById("trading-animation");
+      anim.style.display = "block";
+      setTimeout(function(){
+        anim.style.display = "none";
+        const gain = soldeDepot * percentage;
+        soldeGains += gain;
+        updateBalances();
+        addLog("Trading confirmé : Gain de $" + gain.toFixed(2) + " ajouté.");
+        showTopNotification("Trading terminé! Gains totaux: $" + soldeGains.toFixed(2), 3000);
+      }, 20000);
+      lastTradingDate = today;
+      localStorage.setItem("lastTradingDate", today);
+    });
+
+    /********* Section 2 : Transactions *********/
+    document.getElementById("btn-depot").addEventListener("click", function(){
+      document.getElementById("form-depot").style.display = "block";
+      document.getElementById("form-retrait").style.display = "none";
+    });
+    document.getElementById("btn-retrait").addEventListener("click", function(){
+      document.getElementById("form-retrait").style.display = "block";
+      document.getElementById("form-depot").style.display = "none";
+    });
+    document.getElementById("copy-depot-address").addEventListener("click", function(){
+      const select = document.getElementById("depot-address");
+      const addr = select.options[select.selectedIndex].getAttribute("data-address");
+      navigator.clipboard.writeText(addr)
+        .then(() => { alert("Adresse copiée : " + addr); })
+        .catch(() => { alert("Erreur lors de la copie de l'adresse."); });
+    });
+    // Validation du dépôt (on ajoute le userPhone si l'utilisateur est connecté)
+    document.getElementById("submit-depot").addEventListener("click", function(){
+      const amount = parseFloat(document.getElementById("depot-amount").value);
+      const select = document.getElementById("depot-address");
+      const addr = select.options[select.selectedIndex].getAttribute("data-address");
+      if(isNaN(amount) || amount <= 0) { alert("Montant invalide."); return; }
+      const today = new Date().toDateString();
+      if(lastDeposit === today) {
+        alert("Vous ne pouvez déposer qu'une fois par jour.");
+        return;
+      }
+      const tx = {
+        id: Date.now(),
+        client: clientID,
+        type: "Dépôt",
+        amount: amount,
+        address: addr,
+        date: new Date().toLocaleString(),
+        status: "En attente"
+      };
+      if(currentUser) {
+        tx.userPhone = currentUser.phone;
+      }
+      transactions.push(tx);
+      localStorage.setItem("transactions", JSON.stringify(transactions));
+      lastDeposit = today;
+      localStorage.setItem("lastDeposit", today);
+      showCenteredNotification("Dépôt en attente de vérification.", 3000);
+      addLog("Dépôt en attente de vérification : $" + amount.toFixed(2));
+      document.getElementById("form-depot").style.display = "none";
+    });
+    // Validation du retrait avec frais 10%
+    document.getElementById("submit-retrait").addEventListener("click", function(){
+      const amount = parseFloat(document.getElementById("retrait-amount").value);
+      const addr = document.getElementById("retrait-address").value.trim();
+      if(isNaN(amount) || amount <= 0) { alert("Montant invalide."); return; }
+      if(amount < 1) { alert("Montant minimum de retrait est $1."); return; }
+      if(new Date().getDay() !== 1) {
+        alert("Les retraits ne sont autorisés que le lundi.");
+        return;
+      }
+      // Vérification du double compte (si applicable)
+      if(currentUser) {
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        let count = users.filter(u => u.phone === currentUser.phone).length;
+        if(count > 1){
+          alert("Retrait bloqué en raison de double compte.");
+          return;
+        }
+      }
+      const tx = {
+        id: Date.now(),
+        client: clientID,
+        type: "Retrait",
+        amount: amount,
+        address: addr,
+        date: new Date().toLocaleString(),
+        status: "En attente"
+      };
+      transactions.push(tx);
+      localStorage.setItem("transactions", JSON.stringify(transactions));
+      showCenteredNotification("Retrait en attente de vérification.", 3000);
+      addLog("Retrait en attente de vérification : $" + amount.toFixed(2));
+      document.getElementById("form-retrait").style.display = "none";
+    });
+
+    /********* Section 3 : Confirmation *********/
+    document.getElementById("access-confirmation").addEventListener("click", function(){
+      const code = prompt("Veuillez entrer le code d'accès :");
+      if(code === "0808"){
+        document.getElementById("confirmation-area").style.display = "block";
+        updateConfirmationTable();
+      } else {
+        alert("Code incorrect !");
+      }
+    });
+    function updateConfirmationTable() {
+      const tbody = document.querySelector("#confirmation-table tbody");
+      tbody.innerHTML = "";
+      transactions.filter(t => t.status === "En attente").forEach(t => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${t.id}</td>
+          <td>${t.client}</td>
+          <td>${t.type}</td>
+          <td>$${t.amount.toFixed(2)}</td>
+          <td>${t.date}</td>
+          <td>
+            <button onclick="confirmTx(${t.id})">Confirmer</button>
+            <button onclick="cancelTx(${t.id})">Annuler</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    /********* Section 4 : Historique *********/
+    function updateHistoriqueTable() {
+      const tbody = document.querySelector("#historique-table tbody");
+      tbody.innerHTML = "";
+      transactions.filter(t => t.status === "Confirmé" || t.status === "Annulé")
+        .forEach(t => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${t.id}</td>
+            <td>${t.client}</td>
+            <td>${t.type}</td>
+            <td>$${t.amount.toFixed(2)}</td>
+            <td>${t.date}</td>
+            <td>${t.status === "Confirmé" ? "Succès" : "Échec"}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+    }
+
+    /********* Fonctions Globales de Confirmation / Annulation *********/
+    window.confirmTx = function(id) {
+      const index = transactions.findIndex(t => t.id === id);
+      if(index > -1) {
+        const t = transactions[index];
+        if(t.type === "Dépôt") {
+          soldeDepot += t.amount;
+          // Si le dépôt est effectué par un utilisateur connecté référé
+          if(t.userPhone) {
+            let teamMembers = JSON.parse(localStorage.getItem("teamMembers")) || [];
+            let member = teamMembers.find(m => m.phone === t.userPhone);
+            if(member && !member.validated) {
+              member.validated = true;
+              localStorage.setItem("teamMembers", JSON.stringify(teamMembers));
+              updateTeamTable();
+              // Calcul du bonus referral (1,5% du dépôt)
+              let bonus = t.amount * 0.015;
+              let currentBonus = parseFloat(localStorage.getItem("referralBonus")) || 0;
+              currentBonus += bonus;
+              localStorage.setItem("referralBonus", currentBonus);
+              updateReferralBonus();
+            }
+          }
+        } else if(t.type === "Retrait") {
+          const totalWithdrawal = t.amount * 1.10;
+          if(soldeGains >= totalWithdrawal) {
+            soldeGains -= totalWithdrawal;
+          } else {
+            alert("Solde des gains insuffisant pour ce retrait (incluant 10% de frais).");
+            return;
+          }
+        }
+        t.status = "Confirmé";
+        localStorage.setItem("transactions", JSON.stringify(transactions));
+        updateBalances();
+        updateConfirmationTable();
+        updateHistoriqueTable();
+        addLog("Transaction confirmée (ID: " + t.id + ")");
+        showTopNotification("Misaotra tompoko", 3000);
+      }
+    };
+
+    window.cancelTx = function(id) {
+      const index = transactions.findIndex(t => t.id === id);
+      if(index > -1) {
+        const t = transactions[index];
+        t.status = "Annulé";
+        localStorage.setItem("transactions", JSON.stringify(transactions));
+        updateConfirmationTable();
+        updateHistoriqueTable();
+        addLog("Transaction annulée (ID: " + t.id + ")");
+      }
+    };
+
+    /********* Formulaires d'Inscription / Connexion *********/
+    // Ouvrir/fermer les modals
+    document.getElementById("open-registration").addEventListener("click", function(e){
+      e.preventDefault();
+      openRegistrationModal();
+    });
+    document.getElementById("open-login").addEventListener("click", function(e){
+      e.preventDefault();
+      openLoginModal();
+    });
+    document.getElementById("close-registration").addEventListener("click", function(){
+      document.getElementById("registration-modal").style.display = "none";
+    });
+    document.getElementById("close-login").addEventListener("click", function(){
+      document.getElementById("login-modal").style.display = "none";
+    });
+    document.getElementById("show-login").addEventListener("click", function(e){
+      e.preventDefault();
+      document.getElementById("registration-modal").style.display = "none";
+      openLoginModal();
+    });
+    function openRegistrationModal(){
+      document.getElementById("registration-modal").style.display = "block";
+      // Générer une recaptcha simple
+      let a = Math.floor(Math.random() * 10) + 1;
+      let b = Math.floor(Math.random() * 10) + 1;
+      window.recaptchaAnswer = a + b;
+      document.getElementById("recaptcha-label").innerText = "Combien font " + a + " + " + b + " ?";
+      // Préremplir le code d'invitation si présent dans l'URL (ex.: ?ref=MYINVITE)
+      let urlParams = new URLSearchParams(window.location.search);
+      let ref = urlParams.get('ref');
+      if(ref) {
+        document.getElementById("reg-invite").value = ref;
+      } else {
+        document.getElementById("reg-invite").value = "";
+      }
+    }
+    function openLoginModal(){
+      document.getElementById("login-modal").style.display = "block";
+    }
+    // Inscription
+    document.getElementById("registration-form").addEventListener("submit", function(e){
+      e.preventDefault();
+      let name = document.getElementById("reg-name").value.trim();
+      let phone = document.getElementById("reg-phone").value.trim();
+      let email = document.getElementById("reg-email").value.trim();
+      let password = document.getElementById("reg-password").value;
+      let recaptchaInput = document.getElementById("reg-recaptcha").value;
+      let inviteCode = document.getElementById("reg-invite").value.trim();
+      if(parseInt(recaptchaInput) !== window.recaptchaAnswer) {
+        alert("Recaptcha incorrect.");
+        return;
+      }
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+      if(users.some(u => u.phone === phone)) {
+        alert("Téléphone déjà utilisé.");
+        return;
+      }
+      if(users.some(u => u.email === email)) {
+        alert("Email déjà utilisé.");
+        return;
+      }
+      let newUser = { id: Date.now(), name, phone, email, password, inviteCode };
+      users.push(newUser);
+      localStorage.setItem("users", JSON.stringify(users));
+      // Si inscription avec notre code d'invitation, on l'ajoute à l'équipe
+      if(inviteCode === INVITER_CODE) {
+        let teamMembers = JSON.parse(localStorage.getItem("teamMembers")) || [];
+        teamMembers.push({ id: newUser.id, name, phone, email, validated: false });
+        localStorage.setItem("teamMembers", JSON.stringify(teamMembers));
+        updateTeamTable();
+      }
+      alert("Inscription réussie. Veuillez vous connecter.");
+      document.getElementById("registration-modal").style.display = "none";
+      openLoginModal();
+    });
+    // Connexion
+    document.getElementById("login-form").addEventListener("submit", function(e){
+      e.preventDefault();
+      let phone = document.getElementById("login-phone").value.trim();
+      let password = document.getElementById("login-password").value;
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+      let user = users.find(u => u.phone === phone && u.password === password);
+      if(user) {
+        currentUser = user;
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        alert("Connexion réussie.");
+        document.getElementById("login-modal").style.display = "none";
+      } else {
+        alert("Identifiants incorrects.");
+      }
+    });
+    // Mot de passe oublié
+    document.getElementById("forgot-password").addEventListener("click", function(e){
+      e.preventDefault();
+      let phone = prompt("Veuillez entrer votre numéro de téléphone :");
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+      let user = users.find(u => u.phone === phone);
+      if(user) {
+        alert("Votre mot de passe est : " + user.password);
+      } else {
+        alert("Numéro de téléphone non trouvé.");
+      }
+    });
+
+    /********* Gestion d'équipes *********/
+    function updateInvitationLink(){
+      const link = window.location.origin + window.location.pathname + "?ref=" + INVITER_CODE;
+      document.getElementById("invitation-link").innerText = link;
+    }
+    function updateTeamTable(){
+      let teamMembers = JSON.parse(localStorage.getItem("teamMembers")) || [];
+      // Afficher uniquement les membres validés
+      let validatedMembers = teamMembers.filter(member => member.validated);
+      const tbody = document.querySelector("#team-table tbody");
+      tbody.innerHTML = "";
+      validatedMembers.forEach(member => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = "<td>" + member.name + "</td><td>" + member.phone + "</td><td>" + member.email + "</td><td>Validé</td>";
+        tbody.appendChild(tr);
+      });
+    }
+    function updateReferralBonus(){
+      let bonus = parseFloat(localStorage.getItem("referralBonus")) || 0;
+      document.getElementById("referral-bonus").innerText = bonus.toFixed(2);
+      if(bonus >= 2) {
+        document.getElementById("add-referral-bonus").style.display = "block";
+      } else {
+        document.getElementById("add-referral-bonus").style.display = "none";
+      }
+    }
+    document.getElementById("copy-invitation-link").addEventListener("click", function(){
+      let link = document.getElementById("invitation-link").innerText;
+      navigator.clipboard.writeText(link)
+        .then(() => { alert("Lien copié : " + link); })
+        .catch(() => { alert("Erreur lors de la copie du lien."); });
+    });
+    document.getElementById("add-referral-bonus").addEventListener("click", function(){
+      let bonus = parseFloat(localStorage.getItem("referralBonus")) || 0;
+      soldeGains += bonus;
+      updateBalances();
+      localStorage.setItem("referralBonus", 0);
+      updateReferralBonus();
+      alert("Bonus de $" + bonus.toFixed(2) + " ajouté aux gains.");
+    });
+    // Initialisation de la section équipe et bonus referral
+    updateInvitationLink();
+    updateTeamTable();
+    updateReferralBonus();
+
+    /********* Mise à jour au chargement *********/
+    updateHistoriqueTable();
+  </script>
+</body>
+</html>
